@@ -13,33 +13,24 @@ import java.time.LocalDate;
 @Table(name = "player")
 @AllArgsConstructor
 
-public class Player {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
-    protected Integer id;
-
-    @Column(name = "FIRST_NAME", length = 30)
-    protected String firstName;
-
-    @Column(name = "LAST_NAME", length = 30)
-    protected String lastName;
+public class Player extends Person {
 
     @Column(name = "NET_WORTH")
-    protected Integer netWorth;
-
-    @Column(name = "DATE_OF_BIRTH")
-    protected LocalDate dateOfBirth;
-
-    @Column(name = "COUNTRY", length = 100)
-    protected String country;
-
+    protected Integer salary;
     @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     @Nullable
     protected Team team;
 
+    @Column(name = "POSITION", length = 30)
+    Positions position;
+    @Column(name = "NUMBER")
+    Integer number;
+    @Column(name = "GOALS", length = 30)
+    Integer goals;
+    @Column(name = "ASSISTS", length = 30)
+    Integer assists;
 
     public Player() {
 

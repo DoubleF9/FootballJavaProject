@@ -76,10 +76,13 @@ public class PlayerService {
         Player player = new Player();
         player.setFirstName(playerDto.getFirstName());
         player.setLastName(playerDto.getLastName());
-        player.setNetWorth(playerDto.getNetWorth());
+        player.setSalary(playerDto.getSalary());
         player.setDateOfBirth(playerDto.getDateOfBirth());
         player.setCountry(playerDto.getCountry());
-
+        player.setNumber(playerDto.getNumber());
+        player.setGoals(playerDto.getGoals());
+        player.setAssists(playerDto.getAssists());
+        player.setPosition(playerDto.getPosition());
 
         return player;
     }
@@ -89,10 +92,13 @@ public class PlayerService {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setFirstName(player.getFirstName());
         playerDto.setLastName(player.getLastName());
-        playerDto.setNetWorth(player.getNetWorth());
+        playerDto.setSalary(player.getSalary());
         playerDto.setDateOfBirth(player.getDateOfBirth());
         playerDto.setCountry(player.getCountry());
-
+        playerDto.setNumber(player.getNumber());
+        playerDto.setGoals(player.getGoals());
+        playerDto.setAssists(player.getAssists());
+        playerDto.setPosition(player.getPosition());
 
         return playerDto;
     }
@@ -101,11 +107,13 @@ public class PlayerService {
         Player player = new Player();
         player.setFirstName(playerDto.getFirstName());
         player.setLastName(playerDto.getLastName());
-        player.setNetWorth(playerDto.getNetWorth());
+        player.setSalary(playerDto.getSalary());
         player.setDateOfBirth(playerDto.getDateOfBirth());
         player.setCountry(playerDto.getCountry());
-
-
+        player.setNumber(playerDto.getNumber());
+        player.setGoals(playerDto.getGoals());
+        player.setAssists(playerDto.getAssists());
+        player.setPosition(playerDto.getPosition());
 
         return playerRepository.save(player);
     }

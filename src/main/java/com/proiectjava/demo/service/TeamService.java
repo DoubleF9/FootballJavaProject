@@ -100,6 +100,7 @@ public class TeamService {
                     manager.setDateOfBirth(dto.getDateOfBirth());
                     manager.setCountry(dto.getCountry());
                     manager.setSalary(dto.getSalary());
+                    manager.setTrophiesWon(dto.getTrophiesWon());
                     return managerRepository.save(manager);
                 });
     }
@@ -148,23 +149,24 @@ public class TeamService {
     }
 
     private ManagerDto convertManagerToDto(Manager manager) {
-        return ManagerDto.builder()
-                .firstName(manager.getFirstName())
-                .lastName(manager.getLastName())
-                .dateOfBirth(manager.getDateOfBirth())
-                .country(manager.getCountry())
-                .salary(manager.getSalary())
-                .build();
+        ManagerDto managerDto = new ManagerDto();
+        managerDto.setFirstName(manager.getFirstName());
+        managerDto.setLastName(manager.getLastName());
+        managerDto.setDateOfBirth(manager.getDateOfBirth());
+        managerDto.setCountry(manager.getCountry());
+        managerDto.setSalary(manager.getSalary());
+        managerDto.setTrophiesWon(manager.getTrophiesWon());
+        return managerDto;
     }
 
     private OwnerDto convertOwnerToDto(Owner owner) {
-        return OwnerDto.builder()
-                .firstName(owner.getFirstName())
-                .lastName(owner.getLastName())
-                .dateOfBirth(owner.getDateOfBirth())
-                .country(owner.getCountry())
-                .netWorth(owner.getNetWorth())
-                .build();
+        OwnerDto ownerDto = new OwnerDto();
+        ownerDto.setFirstName(owner.getFirstName());
+        ownerDto.setLastName(owner.getLastName());
+        ownerDto.setDateOfBirth(owner.getDateOfBirth());
+        ownerDto.setCountry(owner.getCountry());
+        ownerDto.setNetWorth(owner.getNetWorth());
+        return ownerDto;
     }
 
     // Service methods
@@ -188,11 +190,7 @@ public class TeamService {
                 .orElse(null);
     }
 
-    public TeamDto findByName(String name) {
-        return teamRepository.findByName(name)
-                .map(this::convertToDto)
-                .orElse(null);
-    }
+
 
     public List<TeamDto> getAllTeams() {
         return teamRepository.findAll().stream()

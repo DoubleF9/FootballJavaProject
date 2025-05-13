@@ -1,6 +1,7 @@
 package com.proiectjava.demo.service;
 
 import com.proiectjava.demo.dto.ManagerDto;
+import com.proiectjava.demo.model.Country;
 import com.proiectjava.demo.model.Manager;
 import com.proiectjava.demo.model.Team;
 import com.proiectjava.demo.repository.ManagerRepository;
@@ -35,7 +36,8 @@ public class ManagerService {
             // Update existing manager properties
             manager.setSalary(dto.getSalary());
             manager.setDateOfBirth(dto.getDateOfBirth());
-            manager.setCountry(dto.getCountry());
+            manager.setCountry(String.valueOf(dto.getCountry()));
+            manager.setTrophiesWon(dto.getTrophiesWon());
             return manager;
         }
 
@@ -45,7 +47,8 @@ public class ManagerService {
         manager.setLastName(dto.getLastName());
         manager.setSalary(dto.getSalary());
         manager.setDateOfBirth(dto.getDateOfBirth());
-        manager.setCountry(dto.getCountry());
+        manager.setCountry(String.valueOf(dto.getCountry()));
+        manager.setTrophiesWon(dto.getTrophiesWon());
 
         return manager;
     }
@@ -54,13 +57,15 @@ public class ManagerService {
     public ManagerDto convertToDto(Manager manager) {
         if (manager == null) return null;
 
-        return ManagerDto.builder()
-                .firstName(manager.getFirstName())
-                .lastName(manager.getLastName())
-                .dateOfBirth(manager.getDateOfBirth())
-                .country(manager.getCountry())
-                .salary(manager.getSalary())
-                .build();
+
+        ManagerDto managerDto = new ManagerDto();
+        managerDto.setFirstName(manager.getFirstName());
+        managerDto.setLastName(manager.getLastName());
+        managerDto.setDateOfBirth(manager.getDateOfBirth());
+        managerDto.setCountry(String.valueOf(manager.getCountry()));
+        managerDto.setSalary(manager.getSalary());
+        managerDto.setTrophiesWon(manager.getTrophiesWon());
+        return managerDto;
     }
 
     public ManagerDto addManager(ManagerDto managerDto, Integer teamId) {
@@ -108,5 +113,8 @@ public class ManagerService {
         Manager manager = convertToEntity(managerDto);
         manager = managerRepository.save(manager);
         return managerDto;
+    }
+    public void deleteManager(Integer id) {
+        managerRepository.deleteById(id);
     }
 }

@@ -22,6 +22,7 @@ public class RefereeService {
             referee.setCountry(refereeDto.getCountry());
             referee.setDateOfBirth(refereeDto.getDateOfBirth());
             referee.setSalary(refereeDto.getSalary());
+            referee.setIsFifaRegistered(refereeDto.getIsFifaRegistered());
             refereeRepository.save(referee);
             return refereeDto;
      }

@@ -1,19 +1,24 @@
 package com.proiectjava.demo.dto;
 
+import com.proiectjava.demo.model.Person;
 import lombok.*;
 
-import java.time.*;
+import java.time.LocalDate;
 
-@Getter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefereeDto {
+public class RefereeDto{
 
     private String firstName;
+
     private String lastName;
-    private Integer salary;
+
     private LocalDate dateOfBirth;
+
     private String country;
+    private Integer salary;
+    private Boolean isFifaRegistered;
+
 
 }
