@@ -7,6 +7,8 @@ import com.proiectjava.demo.repository.PlayerRepository;
 import com.proiectjava.demo.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/player")
 public class PlayerController {
@@ -23,6 +25,23 @@ public class PlayerController {
     public String addPlayerToTeam(@RequestBody AddPlayerToTeamDto addPlayerToTeam) {
         return playerService.addPlayerToTeam(addPlayerToTeam);
     }
+    @GetMapping("/getPlayer/{id}")
+    public PlayerDto getPlayer(@PathVariable Integer id) {
+        return playerService.getPlayerById(id);
+    }
+    @PutMapping("/update/{id}")
+    public PlayerDto updatePlayer(@PathVariable Integer id, @RequestBody PlayerDto player) {
+        return playerService.updatePlayer(id, player);
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deletePlayer( @PathVariable Integer id) {
+        playerService.deletePlayer(id);
+    }
+    @GetMapping("/findAllByTeam/{teamId}")
+    public List<PlayerDto> findAllByTeam(@PathVariable Integer teamId) {
+        return playerService.findAllByTeamId(teamId);
+    }
+
 
 
 }

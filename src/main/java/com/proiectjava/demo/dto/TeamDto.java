@@ -6,7 +6,7 @@ import com.proiectjava.demo.model.Owner;
 import com.proiectjava.demo.model.Stadium;
 import lombok.*;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

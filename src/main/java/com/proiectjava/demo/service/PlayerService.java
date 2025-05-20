@@ -8,6 +8,7 @@ import com.proiectjava.demo.repository.PlayerRepository;
 import com.proiectjava.demo.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,8 +112,8 @@ public class PlayerService {
         player.setDateOfBirth(playerDto.getDateOfBirth());
         player.setCountry(playerDto.getCountry());
         player.setNumber(playerDto.getNumber());
-        player.setGoals(playerDto.getGoals());
-        player.setAssists(playerDto.getAssists());
+        player.setGoals(playerDto.getGoals()==null ? 0 : playerDto.getGoals());
+        player.setAssists(playerDto.getAssists()==null ? 0 : playerDto.getAssists());
         player.setPosition(playerDto.getPosition());
 
         return playerRepository.save(player);
@@ -139,8 +140,40 @@ public class PlayerService {
         }
         return convertToDto(player);
     }
-    public List<Player> findAllByTeam(Optional<Team> team) {
-        return playerRepository.findAllByTeam(team);
+    public List<PlayerDto> findAllByTeamId(Integer teamId) {
+        Team team = teamRepository.findById(teamId).orElse(null);
+        if (team == null) {
+            return List.of(); // Return empty list if team doesn't exist
+        }
+        List<Player> players = playerRepository.findAllByTeam(Optional.of(team));
+
+        return players.stream()
+                .map(this::convertToDto)
+                .sorted(Comparator.comparing(PlayerDto::getGoals)
+                        .reversed())
+                .toList();
+
+    }
+
+    public PlayerDto updatePlayer(Integer id, PlayerDto playerDto) {
+        Player player = playerRepository.findById(id).orElse(null);
+        if (player == null) {
+            return null;
+        }
+        player.setFirstName(playerDto.getFirstName());
+        player.setLastName(playerDto.getLastName());
+        player.setSalary(playerDto.getSalary());
+        player.setDateOfBirth(playerDto.getDateOfBirth());
+        player.setCountry(playerDto.getCountry());
+        player.setNumber(playerDto.getNumber());
+        player.setGoals(playerDto.getGoals());
+        player.setAssists(playerDto.getAssists());
+        player.setPosition(playerDto.getPosition());
+
+        return convertToDto(playerRepository.save(player));
+    }
+    public void deletePlayer(Integer id) {
+        playerRepository.deleteById(id);
     }
 
 }

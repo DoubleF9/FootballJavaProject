@@ -9,8 +9,9 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Table(name = "team")
-
+@Table(name = "team", indexes = {
+        @Index(name = "idx_team_relations", columnList = "NAME, LEAGUE_ID, STADIUM_ID, MANAGER_ID, OWNER_ID")
+})
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

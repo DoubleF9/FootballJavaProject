@@ -3,6 +3,10 @@ package com.proiectjava.demo.service;
 import com.proiectjava.demo.dto.*;
 import com.proiectjava.demo.model.*;
 import com.proiectjava.demo.repository.*;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +16,9 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+
 public class TeamService {
+    private final static Logger log = LoggerFactory.getLogger(TeamService.class);
     private final TeamRepository teamRepository;
     private final LeagueRepository leagueRepository;
     private final StadiumRepository stadiumRepository;
@@ -171,6 +177,7 @@ public class TeamService {
 
     // Service methods
     public TeamDto addTeam(TeamDto teamDto) {
+
         Team team = convertToEntity(teamDto);
         Stadium stadium = convertStadiumToEntity(teamDto.getStadium());
         team.setStadium(stadium);
@@ -182,6 +189,60 @@ public class TeamService {
         team.setOwner(owner);
         team = teamRepository.save(team);
         return convertToDto(team);
+    }
+
+    public TeamDto addTeamWithId(TeamWithIdDto dto) {
+        // Check if team with identical properties already exists
+        List<Team> existingTeams = teamRepository.findByName(dto.getName())
+                .map(List::of)
+                .orElse(List.of());
+
+        for (Team team : existingTeams) {
+            // Check if all fields match
+            boolean leagueMatches = (dto.getLeagueId() == null && team.getLeague() == null) ||
+                    (team.getLeague() != null && dto.getLeagueId() != null &&
+                            team.getLeague().getId().equals(dto.getLeagueId()));
+
+            boolean stadiumMatches = (dto.getStadiumId() == null && team.getStadium() == null) ||
+                    (team.getStadium() != null && dto.getStadiumId() != null &&
+                            team.getStadium().getId().equals(dto.getStadiumId()));
+
+            boolean managerMatches = (dto.getManagerId() == null && team.getManager() == null) ||
+                    (team.getManager() != null && dto.getManagerId() != null &&
+                            team.getManager().getId().equals(dto.getManagerId()));
+
+            boolean ownerMatches = (dto.getOwnerId() == null && team.getOwner() == null) ||
+                    (team.getOwner() != null && dto.getOwnerId() != null &&
+                            team.getOwner().getId().equals(dto.getOwnerId()));
+
+            if (leagueMatches && stadiumMatches && managerMatches && ownerMatches) {
+                return convertToDto(team);
+            }
+        }
+
+        // Create new team if not found
+        Team team = new Team();
+        team.setName(dto.getName());
+
+        // Handle related entities
+        if (dto.getLeagueId() != null) {
+            League league = leagueRepository.findById(dto.getLeagueId()).orElse(null);
+            team.setLeague(league);
+        }
+        if (dto.getStadiumId() != null) {
+            Stadium stadium = stadiumRepository.findById(dto.getStadiumId()).orElse(null);
+            team.setStadium(stadium);
+        }
+        if (dto.getManagerId() != null) {
+            Manager manager = managerRepository.findById(dto.getManagerId()).orElse(null);
+            team.setManager(manager);
+        }
+        if (dto.getOwnerId() != null) {
+            Owner owner = ownerRepository.findById(dto.getOwnerId()).orElse(null);
+            team.setOwner(owner);
+        }
+
+        return convertToDto(teamRepository.save(team));
     }
 
     public TeamDto findById(Integer id) {
@@ -226,6 +287,58 @@ public class TeamService {
                 .orElse(null);
     }
 
+    public TeamDto updateWithId(TeamWithIdDto dto) {
+        log.info("Updating team with ID: {}", dto.getId());
+        return teamRepository.findById(dto.getId())
+                .map(existingTeam -> {
+                    if (dto.getName() != null) {
+                        existingTeam.setName(dto.getName());
+                    }
+
+                    if (dto.getLeagueId() != null) {
+                        Optional<League> league = leagueRepository.findById(dto.getLeagueId());
+                        if(league.isPresent()) {
+                            existingTeam.setLeague(league.get());
+                        }
+                        else{
+                            log.info("League with leagueId=[{}] not found.", dto.getLeagueId());
+                        }
+                    }
+
+                    if (dto.getStadiumId() != null) {
+                        Optional<Stadium> stadium = stadiumRepository.findById(dto.getStadiumId());
+                        if(stadium.isPresent()) {
+                            existingTeam.setStadium(stadium.get());
+                        }
+                        else{
+                            log.info("Stadium with stadiumId=[{}] not found.", dto.getStadiumId());
+                        }
+                    }
+
+                    if (dto.getManagerId() != null) {
+                        Optional<Manager> manager = managerRepository.findById(dto.getManagerId());
+                        if(manager.isPresent()) {
+                            existingTeam.setManager(manager.get());
+                        }
+                        else{
+                            log.info("Manager with managerId=[{}] not found.", dto.getManagerId());
+                        }
+                    }
+
+                    if (dto.getOwnerId() != null) {
+                        Optional<Owner> owner = ownerRepository.findById(dto.getOwnerId());
+                        if(owner.isPresent()) {
+                            existingTeam.setOwner(owner.get());
+                        }
+                        else{
+                            log.info("Owner with ownerId=[{}] not found.", dto.getOwnerId());
+                        }
+                    }
+                    log.info("Updating team with ID: {} completed", dto.getId());
+                    return convertToDto(teamRepository.save(existingTeam));
+                })
+                .orElse(null);
+    }
 
     public void deleteTeam(Integer id) {
         Optional<Team> team = teamRepository.findById(id);

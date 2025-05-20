@@ -17,11 +17,24 @@ public class RefereeController {
         this.refereeService = refereeService;
     }
     @GetMapping("/all")
-    public List<Referee> getReferees() {
+    public List<RefereeDto> getReferees() {
         return refereeService.getReferees();
     }
     @PostMapping("/add")
     public RefereeDto add(@RequestBody RefereeDto refereeDto) {
         return refereeService.add(refereeDto);
     }
+    @GetMapping("getReferee/{id}")
+    public RefereeDto getRefereeById(@PathVariable Integer id) {
+        return refereeService.getRefereeById(id);
+    }
+    @PutMapping("/update/{id}")
+    public RefereeDto updateReferee(@PathVariable Integer id, @RequestBody RefereeDto refereeDto) {
+        return refereeService.updateReferee(id, refereeDto);
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteReferee(@PathVariable Integer id) {
+        refereeService.deleteReferee(id);
+    }
+
 }
